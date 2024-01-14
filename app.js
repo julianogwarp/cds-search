@@ -71,7 +71,7 @@ const sendEmail = async (formattedResults) => {
     }
 };
 
-cron.schedule('*/1 * * * *', () => {
+cron.schedule('0 0 * * Tue', () => {
     fetchNewestResultsForChicoDaSilva().then(results => {
         console.log(results);
         sendEmail(results);
