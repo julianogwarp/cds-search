@@ -35,7 +35,7 @@ async function fetchNewestResultsForChicoDaSilva() {
                 dateRestrict: 'w1', // For the past week
             },
         });
-
+        console.log('response', response)
         const processedResults = response.data.items.map(item => {
             return {
                 title: item.title,
