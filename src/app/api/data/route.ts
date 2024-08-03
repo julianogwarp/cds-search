@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       'Content-Type': 'application/json',
     },
   });
-
+  console.log('cron job working every 5 minutes')
   const { items } = await res.json(); 
   return NextResponse.json({ items });
 }
