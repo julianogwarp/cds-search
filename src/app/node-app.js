@@ -32,7 +32,7 @@ async function fetchNewestResultsForChicoDaSilva() {
                 key: API_KEY,
                 cx: CX,
                 q: 'Chico da Silva',
-                dateRestrict: 'w1', // For the past week
+                dateRestrict: 'w1', 
             },
         });
         console.log('response', response)
