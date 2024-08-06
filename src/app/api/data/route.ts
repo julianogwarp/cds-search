@@ -17,8 +17,8 @@ export async function GET(request: Request) {
   });
  const { items } = await res.json();
  const fetchedAt = new Date();
-   const normalizeText = (text) => text.toLowerCase().replace(/[^\w\s]/gi, '');
-   const filteredItems = items.filter(item => {
+   const normalizeText = (text: string) => text.toLowerCase().replace(/[^\w\s]/gi, '');
+   const filteredItems = items.filter((item: { title: any; pagemap: { metatags: { [x: string]: any; }[]; }; }) => {
     const normalizedTitle = normalizeText(item.title || '');
     const normalizedDescription = normalizeText(item.pagemap?.metatags?.[0]?.['og:title'] || '');
 
