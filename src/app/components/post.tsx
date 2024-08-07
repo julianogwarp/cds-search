@@ -48,7 +48,8 @@ interface Item {
 }
 interface DataProps {
   items: Item[];
-  fetchedAt: number
+  fetchedAt: number;
+  relativeTime: string
 }
 export const dynamic = "force-dynamic";
 export default function Post() {
@@ -72,7 +73,7 @@ export default function Post() {
       </div>
     );
        const item = data.items[0];
-       const { items, fetchedAt } = data;
+       const { items, fetchedAt, relativeTime } = data;
   return (
     <div className="px-24 drop-shadow-sm">
       {data.items.length > 0 ? (
@@ -157,7 +158,7 @@ export default function Post() {
                     <p className="text-sm "> More Information</p>
                   </button>
                   <p className="text-gray-500 text-sm">
-                    fetched {timeAgo(fetchedAt)}
+                    fetched {(relativeTime)}
                   </p>
                 </div>
               </div>
