@@ -1,6 +1,13 @@
 
 import React from "react";
 import Post from "./components/post";
+const intervals = [
+  {
+    id: "1w",
+    name: "Every Week",
+    cron: "0 0 * * 0",
+  },
+];
 export default function Page() {
    
   return (
@@ -17,14 +24,16 @@ export default function Page() {
         <div>
           {" "}
           <span className="font-light text-md mb-8">
-           Created using Vercel app router api and Vercel cron job.
+            Created using Vercel app router api and Vercel cron job.
           </span>
         </div>
         <hr className="p-8"></hr>
       </section>
 
       <div className="mx-32">
-        <Post />
+        {intervals.map((interval) => (
+          <Post interval={interval.id}/>
+        ))}
       </div>
     </>
   );

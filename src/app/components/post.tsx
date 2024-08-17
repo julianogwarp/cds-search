@@ -2,6 +2,7 @@
 import React from "react";
 import useSWR from "swr";
 import ms from "ms";
+import { formatDistanceToNow } from "date-fns";
 interface CseImg {
   src: string
 }
@@ -52,7 +53,8 @@ interface DataProps {
   relativeTime: string
 }
 export const dynamic = "force-dynamic";
-export default function Post() {
+export default function Post({interval} : {interval: string}) {
+  console.log('interval', interval)
   const { data, error } = useSWR<DataProps>(
     `/api/data`,
     (url: string | URL | Request) => fetch(url).then((res) => res.json())
@@ -61,6 +63,7 @@ export default function Post() {
      window.open("https://www.example.com", "_blank");
    };
    console.log('data', data)
+   
   if (error) return <div>Failed to load</div>;
   if (!data)
     return (
@@ -73,7 +76,10 @@ export default function Post() {
       </div>
     );
        const item = data.items[0];
-       const { items, fetchedAt, relativeTime } = data;
+       const { items, fetchedAt } = data;
+      const relativeTime = formatDistanceToNow(new Date(data.fetchedAt), {
+        addSuffix: true,
+      });
   return (
     <div className="px-24 drop-shadow-sm">
       {data.items.length > 0 ? (
@@ -158,7 +164,10 @@ export default function Post() {
                     <p className="text-sm "> More Information</p>
                   </button>
                   <p className="text-gray-500 text-sm">
-                    fetched {(relativeTime)}
+                    fetched {timeAgo(fetchedAt)}
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    fetched {relativeTime}
                   </p>
                 </div>
               </div>
