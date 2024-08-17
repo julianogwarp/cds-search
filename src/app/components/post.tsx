@@ -54,6 +54,7 @@ interface DataProps {
 }
 
 export default function Post() {
+ 
   const { data, error } = useSWR<DataProps>(
     `/api/data`,
     (url: string | URL | Request) => fetch(url).then((res) => res.json())

@@ -8,13 +8,20 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    // Retrieve the stored data from KV
+    //discomment  this to work locally
+    // console.log('Attempting to retrieve data from KV store');
+    // await kv.set('testKey', 'testValue');
+
     const data = await kv.get('weeklyData');
     
+    console.log('Retrieved data:', data);
+
     if (data) {
+      console.log('Data found, returning it');
       return NextResponse.json(data);
     }
 
+    console.log('No data found in KV store');
     return NextResponse.json({ message: 'No data available.' });
   } catch (error) {
     console.error('Error accessing KV store:', error);
