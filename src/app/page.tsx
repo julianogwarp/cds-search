@@ -31,9 +31,9 @@ export default function Page() {
       </section>
 
       <div className="mx-32">
-        {intervals.map((interval) => (
-          <Post interval={interval.id}/>
-        ))}
+        
+          <Post />
+       
       </div>
     </>
   );

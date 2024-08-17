@@ -53,8 +53,8 @@ interface DataProps {
   relativeTime: string
 }
 export const dynamic = "force-dynamic";
-export default function Post({interval} : {interval: string}) {
-  console.log('interval', interval)
+export default function Post() {
+  
   const { data, error } = useSWR<DataProps>(
     `/api/data`,
     (url: string | URL | Request) => fetch(url).then((res) => res.json())
