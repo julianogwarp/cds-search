@@ -1,15 +1,15 @@
 "use client";
 import React from "react";
 import useSWR from "swr";
-import ms from "ms";
 import { formatDistanceToNow } from "date-fns";
+
 interface CseImg {
-  src: string
+  src: string;
 }
 interface CseThumb {
-  height: string,
-  src: string,
-  width: string
+  height: string;
+  src: string;
+  width: string;
 }
 
 interface MetaTags {
@@ -39,7 +39,7 @@ interface Components {
   cse_image: CseImg[];
   cse_thumbnail: CseThumb[];
   metatags: MetaTags[];
-} 
+}
 interface Item {
   pagemap: Components;
   kind: string;
@@ -50,22 +50,17 @@ interface Item {
 interface DataProps {
   items: Item[];
   fetchedAt: number;
-  relativeTime: string
+  relativeTime: string;
 }
-export const dynamic = "force-dynamic";
+
 export default function Post() {
-  
   const { data, error } = useSWR<DataProps>(
     `/api/data`,
     (url: string | URL | Request) => fetch(url).then((res) => res.json())
   );
-   const handleClick = () => {
-     window.open("https://www.example.com", "_blank");
-   };
-   console.log('data', data)
-   
+
   if (error) return <div>Failed to load</div>;
-  if (!data)
+  if (!data || !data.items)
     return (
       <div className="flex justify-between items-center border border-gray-100 shadow-md rounded-lg p-5">
         <div className="grid gap-3">
@@ -75,16 +70,17 @@ export default function Post() {
         <div className="bg-gray-200 animate-pulse rounded-md w-28 h-4" />
       </div>
     );
-       const item = data.items[0];
-       const { items, fetchedAt } = data;
-      const relativeTime = formatDistanceToNow(new Date(data.fetchedAt), {
-        addSuffix: true,
-      });
+
+  const { items, fetchedAt } = data;
+  const relativeTime = formatDistanceToNow(new Date(fetchedAt), {
+    addSuffix: true,
+  });
+  console.log("data", data);
   return (
     <div className="px-24 drop-shadow-sm">
-      {data.items.length > 0 ? (
+      {items.length > 0 ? (
         <ul className=" ">
-          {data.items.map((item, index: number) => (
+          {items.map((item, index: number) => (
             <li
               className="bg-white my-4 flex border border-gray-200  rounded-md p-5"
               key={index}
@@ -158,14 +154,13 @@ export default function Post() {
                 </div>
                 <div className="min-w-0 ">
                   <button
-                    onClick={handleClick}
-                    className="px-4 py-2 w-52 h-10 border rounded-md border-gray-200 text-black  hover:bg-gray-100 focus:outline-none"
+                    onClick={() =>
+                      window.open("https://www.example.com", "_blank")
+                    }
+                    className="px-4 py-2 w-52 h-10 border rounded-md border-gray-200 text-black hover:bg-gray-100 focus:outline-none"
                   >
                     <p className="text-sm "> More Information</p>
                   </button>
-                  <p className="text-gray-500 text-sm">
-                    fetched {timeAgo(fetchedAt)}
-                  </p>
                   <p className="text-gray-500 text-sm">
                     fetched {relativeTime}
                   </p>
@@ -180,7 +175,3 @@ export default function Post() {
     </div>
   );
 }
-const timeAgo = (time: number): string => {
-  if (!time) return "Never";
-  return `${ms(Date.now() - new Date(time).getTime())} ago`;
-};

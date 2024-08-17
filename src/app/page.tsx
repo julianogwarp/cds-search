@@ -29,11 +29,8 @@ export default function Page() {
         </div>
         <hr className="p-8"></hr>
       </section>
-
-      <div className="mx-32">
-        
+      <div>
           <Post />
-       
       </div>
     </>
   );
