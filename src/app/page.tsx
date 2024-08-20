@@ -38,7 +38,7 @@ export default function Page() {
   return (
     <>
       <section className="pt-10 flex justify-center flex-col gap-2 px-4 md:px-24">
-        <h1 className="font-bold text-zinc-900 text-xl md:text-5xl">
+        <h1 className="font-bold text-zinc-900 text-xl md:text-xl">
           Chico da Silva / Auction Cron Job
         </h1>
         <div>
