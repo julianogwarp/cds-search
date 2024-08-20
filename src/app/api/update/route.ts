@@ -7,8 +7,8 @@ export const runtime = "edge";
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
-  const API_KEY = 'AIzaSyANjq9n5tMPR8BleLh3rgvYlHdZtGcwGTQ';
-  const CX = '7165046d72cc1417f';
+  const API_KEY = process.env.API_KEY;
+  const CX = process.env.CX;
   const query = 'Chico da Silva';
   const dateRestrict = 'm1';
   const exactTerms = 'LeilõesBR';
