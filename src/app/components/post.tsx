@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
 import { formatDistanceToNow } from "date-fns";
 
@@ -41,6 +41,7 @@ interface Components {
   metatags: MetaTags[];
 }
 interface Item {
+  formattedUrl: any;
   pagemap: Components;
   kind: string;
   title: string;
@@ -53,35 +54,73 @@ interface DataProps {
   relativeTime: string;
 }
 
-export default function Post() {
+interface PostProps {
+  onImageClick: (src: string) => void;
+}
+export default function Post({ onImageClick }: PostProps) {
  
   const { data, error } = useSWR<DataProps>(
     `/api/data`,
     (url: string | URL | Request) => fetch(url).then((res) => res.json())
   );
-
-  if (error) return <div>Failed to load</div>;
-  if (!data || !data.items)
-    return (
-      <div className="flex justify-between items-center border border-gray-100 shadow-md rounded-lg p-5">
-        <div className="grid gap-3">
-          <div className="bg-gray-200 animate-pulse rounded-md w-96 h-6" />
-          <div className="bg-gray-200 animate-pulse rounded-md w-60 h-4" />
-        </div>
-        <div className="bg-gray-200 animate-pulse rounded-md w-28 h-4" />
-      </div>
-    );
+  console.log('data', data)
+if (error) return ;
+if (!data || !data.items)
+   return (
+     <ul className="px-24 drop-shadow-sm">
+       {Array.from({ length: 3 }).map((_, index) => (
+         <li
+           key={index}
+           className="bg-white my-4 flex border border-gray-200 rounded-md p-5 animate-pulse"
+         >
+           <div className="flex w-screen gap-x-4 justify-center">
+             <div className="flex border rounded-sm border-indigo-600 p-8 filter items-center">
+               <div className="object-cover max-w-32 max-h-32 bg-gray-200 h-32 w-32"></div>
+             </div>
+             <div className="min-w-0 flex-auto">
+               <div className="flex">
+                 <div className="flex-1">
+                   <div className="bg-gray-200 h-4 rounded-md mb-2 w-48"></div>
+                   <div className="bg-gray-200 h-4 rounded-md w-36"></div>
+                 </div>
+                 <div className="px-4 flex-1">
+                   <div className="bg-gray-200 h-4 rounded-md mb-2 w-32"></div>
+                   <div className="bg-gray-200 h-4 rounded-md w-24"></div>
+                 </div>
+               </div>
+               <div className="max-w-lg">
+                 <div className="bg-gray-200 h-4 rounded-md mb-2 w-full"></div>
+                 <div className="bg-gray-200 h-4 rounded-md w-3/4"></div>
+               </div>
+               <div>
+                 <div className="bg-gray-200 h-4 rounded-md mb-2 w-20"></div>
+                 <div className="bg-gray-200 h-4 rounded-md w-16"></div>
+               </div>
+             </div>
+             <div className="min-w-0 flex flex-col justify-between items-end">
+               <div className="bg-gray-200 h-4 w-52 rounded-md"></div>
+               <div className="bg-gray-200 h-4 rounded-md w-28 mt-4"></div>
+             </div>
+           </div>
+         </li>
+       ))}
+     </ul>
+   );
 
   const { items, fetchedAt } = data;
   const relativeTime = formatDistanceToNow(new Date(fetchedAt), {
     addSuffix: true,
   });
-  console.log("data", data);
+   const filteredItems = items.filter((item) =>
+     item.title.toLowerCase().includes("chico")
+   );
+   
+   
   return (
     <div className="px-24 drop-shadow-sm">
-      {items.length > 0 ? (
+      {filteredItems.length > 0 ? (
         <ul className=" ">
-          {items.map((item, index: number) => (
+          {filteredItems.map((item, index: number) => (
             <li
               className="bg-white my-4 flex border border-gray-200  rounded-md p-5"
               key={index}
@@ -90,35 +129,31 @@ export default function Post() {
                 <div className="flex border  rounded-sm border-indigo-600 p-8 filter items-center ">
                   {item.pagemap?.cse_image?.length > 0 && (
                     <img
-                      className="object-cover max-w-32 max-h-32 grayscale"
+                      className="object-cover max-w-32 max-h-32 grayscale cursor-pointer hover:grayscale-0"
                       src={item.pagemap.cse_image[0].src}
                       alt={item.title}
                       width="200"
                       height="200"
+                      onClick={() =>
+                        onImageClick(item.pagemap.cse_image[0].src)
+                      }
                     />
                   )}
                 </div>
-                <div className="min-w-0 flex-auto">
-                  {item.pagemap?.metatags?.length > 0 && (
-                    <div className="flex">
-                      <div className="">
-                        <p className="text-sm leading-6 text-gray-500">Title</p>
-                        <p className="text-sm leading-6 text-gray-900">
-                          {item.title.toLowerCase()}
-                        </p>
+                <div className="max-w-max flex-auto ">
+                  {item.pagemap?.metatags?.length > 0 &&
+                    !item.title.includes("chico") && (
+                      <div className="flex">
+                        <div className="">
+                          <p className="text-sm leading-6 text-gray-500 ">
+                            Title
+                          </p>
+                          <p className="text-sm leading-6 text-gray-900">
+                            {item.title.toLowerCase()}
+                          </p>
+                        </div>
                       </div>
-                      <div className="px-4">
-                        <p className="text-sm  leading-6 text-gray-500">
-                          Brand
-                        </p>
-                        <p className="text-sm leading-6 text-gray-900">
-                          {item.pagemap?.metatags?.[0]?.[
-                            "product:brand"
-                          ]?.toLowerCase()}
-                        </p>
-                      </div>
-                    </div>
-                  )}
+                    )}
                   {item.pagemap?.metatags?.length > 0 && (
                     <div className="max-w-lg">
                       <p className="text-sm leading-6 text-gray-500">
@@ -131,6 +166,7 @@ export default function Post() {
                       </p>
                     </div>
                   )}
+
                   {item.pagemap?.metatags?.length > 0 && (
                     <div>
                       <p className="text-sm leading-6 text-gray-500">Price</p>
@@ -142,6 +178,7 @@ export default function Post() {
                             ]
                           }
                         </p>
+                        <span className="m-1">{""} </span>
                         <p className="text-sm leading-6 text-gray-900">
                           {
                             item.pagemap?.metatags?.[0]?.[
@@ -153,17 +190,27 @@ export default function Post() {
                     </div>
                   )}
                 </div>
-                <div className="min-w-0 ">
+                <div className="flex-auto pl-16">
+                  <p className="text-sm leading-6 text-gray-500">
+                    Auction House
+                  </p>
+                  <p className="text-sm leading-6 text-gray-900">
+                    {item.pagemap?.metatags?.[0]?.[
+                      "product:brand"
+                    ]?.toLowerCase()}
+                  </p>
+                </div>
+                <div className="min-w-0 justify-center ">
                   <button
                     onClick={() =>
-                      window.open("https://www.example.com", "_blank")
+                      window.open(`${item.formattedUrl}`, "_blank")
                     }
                     className="px-4 py-2 w-52 h-10 border rounded-md border-gray-200 text-black hover:bg-gray-100 focus:outline-none"
                   >
                     <p className="text-sm "> More Information</p>
                   </button>
-                  <p className="text-gray-500 text-sm">
-                    fetched {relativeTime}
+                  <p className=" flex justify-center text-gray-500 text-sm pt-2">
+                    Fetched in {relativeTime}
                   </p>
                 </div>
               </div>

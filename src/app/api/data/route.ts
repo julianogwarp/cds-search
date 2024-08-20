@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     //discomment  this to work locally
-    // console.log('Attempting to retrieve data from KV store');
-    // await kv.set('testKey', 'testValue');
+    console.log('Attempting to retrieve data from KV store');
+    await kv.set('testKey', 'testValue');
 
     const data = await kv.get('weeklyData');
     

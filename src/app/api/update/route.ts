@@ -20,10 +20,6 @@ export async function GET(request: NextRequest) {
   });
 
   const responseData = await res.json();
-
-  // Log the entire response to inspect its structure
-  
-
   const { items } = responseData;
 
   if (!items) {
@@ -34,15 +30,11 @@ export async function GET(request: NextRequest) {
   const fetchedAt = Date.now();
 
   try {
-    // Store the fetched data and timestamp in Vercel KV
     await kv.set('weeklyData', {
       items,
       fetchedAt,
     });
-    console.log('Data successfully stored:', { items, fetchedAt });
-
-    // Immediately try to retrieve the data to verify storage
-   
+    console.log('Data successfully stored:', { fetchedAt });
    
   } catch (error) {
     console.error('Error storing or verifying data:', error);
